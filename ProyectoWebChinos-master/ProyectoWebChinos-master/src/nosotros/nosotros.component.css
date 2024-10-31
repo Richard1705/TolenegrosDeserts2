@@ -1,0 +1,136 @@
+/* Estilos generales para el fondo */
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #1c1c1c, #f04d23); /* Degradado negro a rojo/naranja */
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+/* Estilo para la sección "nosotros" */
+.nosotros {
+  padding: 40px;
+  margin: 40px auto;
+  max-width: 800px;
+  text-align: center;
+  color: #f0f0f0;
+  animation: fadeSlideIn 1.8s ease-in-out; /* Nueva animación */
+}
+
+/* Nueva animación de entrada para la sección */
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilo para el título */
+.nosotros h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  letter-spacing: 1.5px;
+  font-weight: bold;
+  color: #ffeb3b; /* Amarillo/dorado para resaltar el título */
+  text-transform: uppercase;
+  animation: popIn 1.5s ease-out;
+}
+
+/* Animación para el título */
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Estilo para los párrafos */
+.nosotros p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: #f0f0f0;
+  line-height: 1.8;
+  max-width: 750px;
+  margin-left: auto;
+  margin-right: auto;
+  animation: fadeUp 1.5s ease-in-out;
+}
+
+/* Animación para los párrafos */
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilo para la dirección */
+address {
+  font-style: normal;
+  color: #ffffff;
+  margin-bottom: 20px;
+  padding: 0;
+  font-size: 1.2rem;
+  line-height: 1.8;
+  animation: slideInLeft 1.7s ease-in-out;
+}
+
+/* Nueva animación para la dirección */
+@keyframes slideInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Enlaces en la dirección (si se agregan en el futuro) */
+address a {
+  color: #4caf50; /* Enlaces en verde */
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+address a:hover {
+  color: #ffeb3b; /* Hover amarillo/dorado */
+}
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 768px) {
+  .nosotros h2 {
+    font-size: 2rem;
+  }
+
+  .nosotros p {
+    font-size: 1rem;
+  }
+
+  address {
+    font-size: 1rem;
+  }
+}
+
+
+  
+  

@@ -1,0 +1,36 @@
+version: '3.9'
+
+services:
+  php-apache:
+    build: .
+    container_name: php7_apache_container
+    ports:
+      - "8082:80"
+    volumes:
+      - ./php:/var/www/html/backend # PHP backend files
+    environment:
+      - APACHE_RUN_USER=www-data
+      - APACHE_RUN_GROUP=www-data
+      - POSTGRES_DB=gymstore
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=chinos123
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:13
+    container_name: postgres_container
+    environment:
+      - POSTGRES_DB=gymstore
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=chinos123
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+volumes:
+  pgdata:

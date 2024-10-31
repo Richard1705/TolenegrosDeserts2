@@ -1,0 +1,41 @@
+<!-- src/app/pago/pago.component.html -->
+<section class="pago">
+  <h2>Proceso de Pago</h2>
+  
+  <!-- Mensaje de Pago Exitoso -->
+  <div *ngIf="paymentSuccess" class="success-message">
+    <p>¡Pago realizado con éxito! Gracias por tu compra.</p>
+    <button (click)="volverAlInicio()">Volver al Inicio</button>
+  </div>
+
+  <!-- Mensaje de Error de Pago -->
+  <div *ngIf="paymentError" class="error-message">
+    <p>{{ paymentError }}</p>
+  </div>
+
+  <!-- Formulario de Pago -->
+  <form *ngIf="!paymentSuccess" (submit)="procesarPago($event)">
+    <div>
+      <label for="nombre">Nombre en la Tarjeta</label>
+      <input
+        type="text"
+        id="nombre"
+        name="nombre"
+        [(ngModel)]="datosPago.nombre"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="card-element">Detalles de la Tarjeta</label>
+      <div id="card-element">
+        <!-- Stripe Card Element será insertado aquí -->
+      </div>
+      <div id="card-errors" role="alert" class="error"></div>
+    </div>
+
+    <button type="submit" [disabled]="isProcessing">
+      {{ isProcessing ? 'Procesando...' : 'Pagar' }}
+    </button>
+  </form>
+</section>
