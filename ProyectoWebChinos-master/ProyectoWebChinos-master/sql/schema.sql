@@ -1,4 +1,4 @@
--- Crear la extensión para manejar UUIDs si es necesario (opcional)
+sql completo: -- Crear la extensión para manejar UUIDs si es necesario (opcional)
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Tabla Clientes
@@ -28,31 +28,31 @@ CREATE TABLE Direcciones (
 CREATE TABLE CuentasPago (
     CuentaPagoID SERIAL PRIMARY KEY,
     ClienteID INT NOT NULL,
-    TipoCuenta VARCHAR(50) NOT NULL, -- Por ejemplo, 'PayPal', 'Tarjeta de Crédito'
+    TipoCuenta VARCHAR(50) NOT NULL, -- Ejemplo: 'PayPal', 'Tarjeta de Crédito'
     DetalleCuenta VARCHAR(255) NOT NULL,
     FOREIGN KEY (ClienteID) REFERENCES Clientes(ClienteID) ON DELETE CASCADE
 );
 
--- Tabla Categorias
+-- Tabla Categorias (postres)
 CREATE TABLE Categorias (
     CategoriaID SERIAL PRIMARY KEY,
     NombreCategoria VARCHAR(100) NOT NULL UNIQUE
 );
 
--- Tabla Marcas
+-- Tabla Marcas (marcas de postres)
 CREATE TABLE Marcas (
     MarcaID SERIAL PRIMARY KEY,
     NombreMarca VARCHAR(100) NOT NULL UNIQUE
 );
 
--- Tabla Proveedores
+-- Tabla Proveedores (proveedores de ingredientes o productos de postres)
 CREATE TABLE Proveedores (
     ProveedorID SERIAL PRIMARY KEY,
     NombreProveedor VARCHAR(255) NOT NULL UNIQUE,
     Contacto VARCHAR(255)
 );
 
--- Tabla Productos
+-- Tabla Productos (postres)
 CREATE TABLE Productos (
     ProductoID SERIAL PRIMARY KEY,
     NombreProducto VARCHAR(255) NOT NULL,
@@ -60,11 +60,8 @@ CREATE TABLE Productos (
     CategoriaID INT NOT NULL,
     MarcaID INT NOT NULL,
     Precio DECIMAL(10, 2) NOT NULL,
-    Materiales VARCHAR(255),
+    Ingredientes VARCHAR(255),
     Peso DECIMAL(10, 2),
-    Altura DECIMAL(10, 2),
-    Ancho DECIMAL(10, 2),
-    Profundidad DECIMAL(10, 2),
     FOREIGN KEY (CategoriaID) REFERENCES Categorias(CategoriaID) ON DELETE SET NULL,
     FOREIGN KEY (MarcaID) REFERENCES Marcas(MarcaID) ON DELETE SET NULL
 );
@@ -86,12 +83,12 @@ CREATE TABLE ImagenesProducto (
     FOREIGN KEY (ProductoID) REFERENCES Productos(ProductoID) ON DELETE CASCADE
 );
 
--- Tabla VariacionesProducto
+-- Tabla VariacionesProducto (tamaños y sabores de postres)
 CREATE TABLE VariacionesProducto (
     VariacionID SERIAL PRIMARY KEY,
     ProductoID INT NOT NULL,
-    Color VARCHAR(50),
-    Opciones VARCHAR(255),
+    Sabor VARCHAR(50),
+    Tamaño VARCHAR(50), -- Tamaño puede ser 'Pequeño', 'Mediano', 'Grande'
     CantidadEnStock INT NOT NULL CHECK (CantidadEnStock >= 0),
     FOREIGN KEY (ProductoID) REFERENCES Productos(ProductoID) ON DELETE CASCADE
 );
@@ -145,66 +142,77 @@ CREATE INDEX idx_pagospedido ON Pagos(PedidoID);
 -- Inserción de Datos de Ejemplo
 -- ---------------------------------------------------------------
 
--- Insertar categorías
+-- Insertar categorías de postres
 INSERT INTO Categorias (NombreCategoria) VALUES 
-('Pesas y Manos Libres'),
-('Equipos de Cardio'),
-('Accesorios de Entrenamiento'),
-('Yoga y Pilates');
+('Pasteles'),
+('Galletas'),
+('Dulces'),
+('Panadería'),
+('Helados');
 
--- Insertar marcas
+-- Insertar marcas de postres
 INSERT INTO Marcas (NombreMarca) VALUES 
-('FitPro'),
-('GymMaster'),
-('StrongLife'),
-('FlexGear');
+('DulceManía'),
+('Delicias Caseras'),
+('Cielo de Chocolate'),
+('Frozen Treats');
 
--- Insertar proveedores
+-- Insertar proveedores de ingredientes o productos
 INSERT INTO Proveedores (NombreProveedor, Contacto) VALUES 
-('Proveedor1', 'contacto1@proveedor.com'),
-('Proveedor2', 'contacto2@proveedor.com');
+('Proveedor Azúcar', 'contacto@azucar.com'),
+('Proveedor Cacao', 'contacto@cacao.com');
 
--- Insertar productos
+-- Insertar productos de ejemplo
 INSERT INTO Productos (
     NombreProducto, 
     Descripcion, 
     CategoriaID, 
     MarcaID, 
     Precio, 
-    Materiales, 
-    Peso, 
-    Altura, 
-    Ancho, 
-    Profundidad
+    Ingredientes, 
+    Peso
 ) VALUES 
-('Mancuernas', 'Juego de mancuernas ajustables de 10kg', 1, 1, 499.99, 'Acero y goma', 10.0, 15.0, 5.0, 5.0),
-('Banco de Pesas', 'Banco ajustable para ejercicios de fuerza', 1, 2, 999.99, 'Acero y acolchado', 50.0, 100.0, 60.0, 30.0),
-('Bicicleta Estática', 'Bicicleta estática con resistencia magnética', 2, 3, 3499.99, 'Acero y plástico', 70.0, 120.0, 50.0, 40.0),
-('Pelota de Pilates', 'Pelota de pilates anti-explosión de 65 cm', 4, 4, 299.99, 'PVC', 2.0, 65.0, 65.0, 65.0),
-('Cuerda para Saltar', 'Cuerda para saltar de velocidad con asas antideslizantes', 3, 1, 199.99, 'Plástico y caucho', 0.5, 150.0, 2.0, 2.0),
-('Kettlebell', 'Kettlebell de 12kg para entrenamiento funcional', 1, 2, 599.99, 'Acero fundido', 12.0, 30.0, 30.0, 30.0),
-('Colchoneta de Yoga', 'Colchoneta antideslizante para yoga y pilates', 4, 4, 399.99, 'EVA y caucho natural', 1.0, 180.0, 60.0, 2.0),
-('Chaleco Lastrado', 'Chaleco lastrado de 10kg para entrenamiento de resistencia', 3, 3, 1299.99, 'Neopreno y acero', 10.0, 30.0, 25.0, 10.0);
+('Pastel de Chocolate', 'Delicioso pastel de chocolate con cobertura de crema', 1, 3, 15.99, 'Harina, Cacao, Azúcar, Huevo', 1.0),
+('Galletas de Avena', 'Galletas caseras con avena y pasas', 2, 2, 4.99, 'Avena, Azúcar, Mantequilla', 0.5),
+('Pan de Nuez', 'Pan dulce con trozos de nuez', 4, 1, 8.99, 'Harina, Nueces, Azúcar', 0.8),
+('Helado de Vainilla', 'Helado cremoso de vainilla', 5, 4, 6.99, 'Leche, Azúcar, Vainilla', 0.4);
 
--- Insertar imágenes de productos
+-- Insertar imágenes de productos (URLs de ejemplo para los postres)
 INSERT INTO ImagenesProducto (ProductoID, URLImagen) VALUES
-(1, 'https://verlo.co/gym/pesas.webp'),
-(2, 'https://verlo.co/gym/bench.webp'),
-(3, 'https://verlo.co/gym/bike.webp'),
-(4, 'https://verlo.co/gym/pilates.webp'),
-(5, 'https://verlo.co/gym/rope.webp'),
-(6, 'https://verlo.co/gym/kettlebelt.webp'),
-(7, 'https://verlo.co/gym/yoga.webp'),
-(8, 'https://verlo.co/gym/vest.webp');
+(1, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSQE0OwmT2J3cRPW3dOtuO_nkb0m5eCtLSoA&s'),
+(2, 'https://png.pngtree.com/png-clipart/20231003/original/pngtree-oatmeal-cookies-isolated-created-with-generative-ai-png-image_13247403.png'),
+(3, 'https://vivamas.com.mx/wp-content/uploads/2021/03/PAN-FINO-CON-NUEZ.png'),
+(4, 'https://froneri.es/img/helados-nestle/detail/xs/vainilla-0-azucares.png');
 
 -- Insertar asociaciones entre productos y proveedores
 INSERT INTO ProductoProveedores (ProductoID, ProveedorID) VALUES
-(1, 1),
-(2, 1),
-(3, 2),
-(4, 2),
-(5, 1),
-(6, 1),
-(7, 2),
-(8, 2);
+(1, 2), -- Pastel de Chocolate (Proveedor de Cacao)
+(2, 1), -- Galletas de Avena (Proveedor de Azúcar)
+(3, 1), -- Pan de Nuez (Proveedor de Azúcar)
+(4, 1); -- Helado de Vainilla (Proveedor de Azúcar)
 
+-- Insertar variaciones de productos (ejemplos de tamaños y sabores)
+INSERT INTO VariacionesProducto (ProductoID, Sabor, Tamaño, CantidadEnStock) VALUES
+(1, 'Chocolate', 'Grande', 10),
+(1, 'Chocolate', 'Mediano', 15),
+(2, 'Avena con Pasas', 'Individual', 30),
+(2, 'Avena con Pasas', 'Paquete Familiar', 20),
+(3, 'Nuez', 'Grande', 5),
+(4, 'Vainilla', '1 litro', 25),
+(4, 'Vainilla', '500 ml', 40);
+
+-- Insertar pedidos de ejemplo
+INSERT INTO Pedidos (ClienteID, TotalPrecio, EstadoPedido, DireccionEnvioID, CuentaPagoID) VALUES
+(1, 30.97, 'Procesando', 1, 1),
+(2, 15.99, 'Enviado', 2, 2);
+
+-- Insertar detalles de pedidos de ejemplo
+INSERT INTO DetallePedido (PedidoID, ProductoID, VariacionID, Cantidad, PrecioUnitario) VALUES
+(1, 1, 1, 1, 15.99), -- Pedido 1 con Pastel de Chocolate Grande
+(1, 2, 3, 3, 4.99), -- Pedido 1 con 3 Galletas de Avena Individuales
+(2, 3, NULL, 1, 8.99); -- Pedido 2 con Pan de Nuez Grande
+
+-- Insertar pagos de ejemplo
+INSERT INTO Pagos (PedidoID, Monto, EstadoPago, IDTransaccionProcesador) VALUES
+(1, 30.97, 'Completado', 'txn_001'),
+(2, 15.99, 'Completado', 'txn_002');

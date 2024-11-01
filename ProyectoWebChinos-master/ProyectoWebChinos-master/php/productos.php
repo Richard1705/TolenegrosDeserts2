@@ -3,6 +3,7 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
+// Configuración de conexión a PostgreSQL
 $host = 'postgres'; 
 $dbname = getenv('POSTGRES_DB'); 
 $user = getenv('POSTGRES_USER'); 
@@ -17,17 +18,14 @@ try {
     // Configurar el modo de error a excepción para facilitar la depuración
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Consulta SQL para obtener productos con su categoría, marca y URL de la imagen
+    // Consulta SQL adaptada para obtener productos con su categoría, marca y URL de la imagen
     $sql = "SELECT 
                 p.ProductoID, 
                 p.NombreProducto, 
                 p.Descripcion, 
                 p.Precio, 
-                p.Materiales, 
+                p.Ingredientes, 
                 p.Peso, 
-                p.Altura, 
-                p.Ancho, 
-                p.Profundidad, 
                 c.NombreCategoria, 
                 m.NombreMarca,
                 ip.URLImagen

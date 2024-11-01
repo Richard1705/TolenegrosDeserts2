@@ -17,7 +17,7 @@ CREATE TABLE Direcciones (
     Estado VARCHAR(100),
     CodigoPostal VARCHAR(20),
     Pais VARCHAR(100) NOT NULL,
-    Tipo VARCHAR(50), -- Por ejemplo, 'Envío', 'Facturación'
+    Tipo VARCHAR(50), -- Ejemplo: 'Envío', 'Facturación'
     FOREIGN KEY (ClienteID) REFERENCES Clientes(ClienteID)
 );
 
@@ -25,48 +25,45 @@ CREATE TABLE Direcciones (
 CREATE TABLE CuentasPago (
     CuentaPagoID INT AUTO_INCREMENT PRIMARY KEY,
     ClienteID INT NOT NULL,
-    TipoCuenta VARCHAR(50) NOT NULL, -- Por ejemplo, 'PayPal', 'Tarjeta de Crédito'
+    TipoCuenta VARCHAR(50) NOT NULL, -- Ejemplo: 'PayPal', 'Tarjeta de Crédito'
     DetalleCuenta VARCHAR(255) NOT NULL,
     FOREIGN KEY (ClienteID) REFERENCES Clientes(ClienteID)
 );
 
--- Tabla Categorias
+-- Tabla Categorias (categorías de postres)
 CREATE TABLE Categorias (
     CategoriaID INT AUTO_INCREMENT PRIMARY KEY,
     NombreCategoria VARCHAR(100) NOT NULL
 );
 
--- Tabla Marcas
+-- Tabla Marcas (marcas de postres)
 CREATE TABLE Marcas (
     MarcaID INT AUTO_INCREMENT PRIMARY KEY,
     NombreMarca VARCHAR(100) NOT NULL
 );
 
--- Tabla Proveedores
+-- Tabla Proveedores (proveedores de ingredientes o productos de postres)
 CREATE TABLE Proveedores (
     ProveedorID INT AUTO_INCREMENT PRIMARY KEY,
     NombreProveedor VARCHAR(255) NOT NULL,
     Contacto VARCHAR(255)
 );
 
--- Tabla Productos
+-- Tabla Productos (postres)
 CREATE TABLE Productos (
     ProductoID INT AUTO_INCREMENT PRIMARY KEY,
     NombreProducto VARCHAR(255) NOT NULL,
     Descripcion TEXT,
     CategoriaID INT NOT NULL,
     MarcaID INT NOT NULL,
-    Precio DECIMAL(10,2) NOT NULL,
-    Materiales VARCHAR(255),
-    Peso DECIMAL(10,2),
-    Altura DECIMAL(10,2),
-    Ancho DECIMAL(10,2),
-    Profundidad DECIMAL(10,2),
+    Precio DECIMAL(10, 2) NOT NULL,
+    Ingredientes VARCHAR(255),
+    Peso DECIMAL(10, 2),
     FOREIGN KEY (CategoriaID) REFERENCES Categorias(CategoriaID),
     FOREIGN KEY (MarcaID) REFERENCES Marcas(MarcaID)
 );
 
--- Tabla ProductoProveedores (Relación Muchos a Muchos entre Productos y Proveedores)
+-- Tabla ProductoProveedores (relación Muchos a Muchos entre Productos y Proveedores)
 CREATE TABLE ProductoProveedores (
     ProductoID INT NOT NULL,
     ProveedorID INT NOT NULL,
@@ -83,12 +80,12 @@ CREATE TABLE ImagenesProducto (
     FOREIGN KEY (ProductoID) REFERENCES Productos(ProductoID)
 );
 
--- Tabla VariacionesProducto
+-- Tabla VariacionesProducto (ejemplos de sabores y tamaños de postres)
 CREATE TABLE VariacionesProducto (
     VariacionID INT AUTO_INCREMENT PRIMARY KEY,
     ProductoID INT NOT NULL,
-    Color VARCHAR(50),
-    Opciones VARCHAR(255),
+    Sabor VARCHAR(50),
+    Tamaño VARCHAR(50), -- Tamaño puede ser 'Pequeño', 'Mediano', 'Grande'
     CantidadEnStock INT NOT NULL,
     FOREIGN KEY (ProductoID) REFERENCES Productos(ProductoID)
 );
@@ -98,7 +95,7 @@ CREATE TABLE Pedidos (
     PedidoID INT AUTO_INCREMENT PRIMARY KEY,
     ClienteID INT NOT NULL,
     FechaHora DATETIME NOT NULL,
-    TotalPrecio DECIMAL(10,2) NOT NULL,
+    TotalPrecio DECIMAL(10, 2) NOT NULL,
     EstadoPedido VARCHAR(50) NOT NULL,
     DireccionEnvioID INT NOT NULL,
     CuentaPagoID INT NOT NULL,
@@ -114,7 +111,7 @@ CREATE TABLE DetallePedido (
     ProductoID INT NOT NULL,
     VariacionID INT,
     Cantidad INT NOT NULL,
-    PrecioUnitario DECIMAL(10,2) NOT NULL,
+    PrecioUnitario DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (PedidoID) REFERENCES Pedidos(PedidoID),
     FOREIGN KEY (ProductoID) REFERENCES Productos(ProductoID),
     FOREIGN KEY (VariacionID) REFERENCES VariacionesProducto(VariacionID)
@@ -125,9 +122,8 @@ CREATE TABLE Pagos (
     PagoID INT AUTO_INCREMENT PRIMARY KEY,
     PedidoID INT NOT NULL,
     FechaHoraPago DATETIME NOT NULL,
-    Monto DECIMAL(10,2) NOT NULL,
+    Monto DECIMAL(10, 2) NOT NULL,
     EstadoPago VARCHAR(50) NOT NULL,
     IDTransaccionProcesador VARCHAR(255),
     FOREIGN KEY (PedidoID) REFERENCES Pedidos(PedidoID)
 );
-
